@@ -25,11 +25,6 @@ Parameters:
     Description: Select the status of the Deployment
     Type: String
     Default: 'PROD:PREP'
-  ApplicationVendor:
-    Description: Tag for Application Vendor
-    MinLength: '1'
-    Type: String
-    Default: OPENET
   PlatformOwner:
     Description: Name of the Project
     MinLength: '1'
@@ -90,8 +85,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -131,8 +124,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -172,8 +163,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -213,8 +202,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -254,8 +241,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -295,8 +280,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -336,8 +319,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -377,8 +358,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -418,8 +397,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -459,8 +436,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -500,8 +475,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -541,8 +514,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -582,8 +553,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -623,8 +592,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -664,8 +631,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -705,8 +670,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -746,8 +709,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -787,8 +748,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -828,8 +787,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -869,8 +826,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -910,8 +865,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -951,8 +904,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -992,8 +943,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1033,8 +982,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1074,8 +1021,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1115,8 +1060,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1156,8 +1099,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1197,8 +1138,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1238,8 +1177,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1279,8 +1216,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1320,8 +1255,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1361,8 +1294,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1402,8 +1333,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1443,8 +1372,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1484,8 +1411,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1525,8 +1450,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1566,8 +1489,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1607,8 +1528,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1648,8 +1567,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1689,8 +1606,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1730,8 +1645,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1771,8 +1684,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1812,8 +1723,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1853,8 +1762,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1894,8 +1801,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1935,8 +1840,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -1976,8 +1879,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2017,8 +1918,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2058,8 +1957,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2099,8 +1996,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2140,8 +2035,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2181,8 +2074,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2222,8 +2113,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
@@ -2263,8 +2152,6 @@ Resources:
           Value: !Ref Deployment
         - Key: Cost Center
           Value: !Ref CostCenter
-        - Key: Application Vendor
-          Value: !Ref ApplicationVendor
         - Key: PIN
           Value: !Ref PIN
         - Key: System Tier
