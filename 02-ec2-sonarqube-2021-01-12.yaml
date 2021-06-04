@@ -1,0 +1,473 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: SonarQube - EC2 CF Deployment
+Parameters:
+  HostNameCE:
+    Description: Hostname
+    MinLength: '1'
+    Type: String
+    Default: 'VMSONADV01'
+  HostNameDE:
+    Description: Hostname
+    MinLength: '1'
+    Type: String
+    Default: 'VMSONADV02'
+  Project:
+    Description: Name of the Project
+    MinLength: '1'
+    Type: String
+    Default: 'DEVOPS:SonarQube'
+  WBSCode:
+    Description: Tag for WBSCode
+    Type: String
+    MinLength: '1'
+    Default: ISG-TECJUMP/18
+  Schedule:
+    Description: Tag for Scheduled Uptime
+    Type: String
+    MinLength: '1'
+    Default: WorkingHours
+  Team:
+    Description: Team
+    Type: String
+    MinLength: '1'
+    Default: DEVOPS
+  CostCenter:
+    Description: Tag for Cost Center
+    MinLength: '1'
+    Type: String
+    Default: ISG-TECJUMP/18
+  Deployment:
+    Description: Select the status of the Deployment
+    Type: String
+    Default: 'DEV:LIVE'
+  PIN:
+    Description: 'PIN #'
+    MinLength: '1'
+    Type: String
+    Default: PIN-000000002781
+  VPC1:
+    Description: VPC
+    MinLength: '1'
+    Type: String
+    Default: vpc-6a20c00c
+  Linux2Image:
+    Description: amzn2 ami id
+    MinLength: '1'
+    Type: String
+    Default: ami-0b1e534a4ff9019e0
+  SG1:
+    Description: Security Groups
+    MinLength: '1'
+    Type: String
+    Default: sg-09ee3b775d9c295e2
+  Subnet:
+    Description: Subnets
+    MinLength: '1'
+    Type: String
+    Default: subnet-4d1a9a14
+Resources:
+  EC2SecGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: devops-ec2-sonarqube-sg
+      GroupDescription: SG used for SQube
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 9000
+          IpProtocol: tcp
+          ToPort: 9000
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: -1
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+      VpcId: !Ref VPC1
+  SNRCE:
+    Type: 'AWS::EC2::Instance'
+    Metadata:
+#      Comment: Install SonarQube
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            /app/sqube/sonar_db.sql:
+              content: |
+                CREATE USER sonar_ce;
+                ALTER USER sonar_ce WITH PASSWORD 'sonarpasswd';
+                CREATE DATABASE sonarqube_ce WITH ENCODING 'UTF8';
+                ALTER DATABASE sonarqube_ce OWNER TO sonar_ce;
+                ALTER USER sonar_ce SET search_path TO public;
+                GRANT ALL PRIVILEGES ON DATABASE sonarqube_ce to sonar_ce;
+              mode: "000777"
+              owner: "root"
+              group: "root"
+            /app/sqube/sonar.properties:
+              content: !Sub |
+                sonar.jdbc.username=sonar_ce
+                sonar.jdbc.password=sonarpasswd
+                sonar.jdbc.url=jdbc:postgresql://vmsonddv01.capx42v1f2r8.ap-southeast-1.rds.amazonaws.com:5432/sonarqube_ce?currentSchema=public
+                sonar.web.host=0.0.0.0
+                sonar.web.port=9000
+              mode: "000644"
+              owner: "root"
+              group: "root"
+            /app/sqube/sonar.service:
+              content: |
+                [Unit]
+                Description=SonarQube service
+                After=syslog.target network.target
+                [Service]
+                Type=forking
+                ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+                ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+                User=sonar
+                Group=sonar
+                #Restart=always
+                Restart=on-failure
+                RestartSec=10s
+                LimitAS=infinity
+                LimitRSS=infinity
+                LimitCORE=infinity
+                LimitNOFILE=262144
+                [Install]
+                WantedBy=multi-user.target
+              mode: "000644"
+              owner: "root"
+              group: "root"
+            /app/sqube/sqube.install.sh:
+              content: |
+                #Configure sysctl variable
+                sudo echo "vm.max_map_count=262144" >> /etc/sysctl.conf;
+                sudo sysctl -p
+
+                #Configure database
+                #export PGPASSWORD=password
+                PGPASSWORD=password psql --host=vmsonddv01.capx42v1f2r8.ap-southeast-1.rds.amazonaws.com -U postgres -d postgres --file /app/sqube/sonar_db.sql -w & wait %1 || EXIT_CODE=0
+
+                #Extract SonarQube web app zip file in /opt
+                wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.6.0.39681.zip -P /opt/sonarqube/ & wait %1 || EXIT_CODE=0
+                unzip /opt/sonarqube/sonarqube-8.6.0.39681.zip -d /opt/sonarqube/ & wait %1 || EXIT_CODE=0
+                sleep 30 & wait %1
+                mv /opt/sonarqube/sonarqube-8.6.0.39681/* /opt/sonarqube/
+                rm -rf /opt/sonarqube/sonarqube-8.6.0.39681/
+
+                #Configure proper permissions
+                sudo groupadd sonar
+                useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+                sudo chown sonar:sonar /opt/sonarqube -R
+
+                #Modify sonar.properties file
+                cp -p /opt/sonarqube/conf/sonar.properties /opt/sonarqube/conf/sonar.properties.bak
+                cp -p /app/sqube/sonar.properties /opt/sonarqube/conf/sonar.properties
+                sudo chown sonar:sonar /app/sqube/sonar.properties
+
+                #Edit the sonar script file and set RUN_AS_USER
+                sed -i '2s/^/RUN_AS_USER=sonar\n/' /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
+                #Create Sonar as a service
+                cp -p /app/sqube/sonar.service /etc/systemd/system/sonar.service
+                sudo systemctl start sonar
+                sudo systemctl enable sonar
+                sudo systemctl status sonar
+              mode: "000777"
+              owner: "root"
+              group: "root"
+    Properties:
+      InstanceType: t3.medium
+      KeyName: elk
+      SecurityGroupIds:
+        - !Ref SG1
+        - !GetAtt EC2SecGroup.GroupId
+      SubnetId: !Ref Subnet
+      ImageId: !Ref Linux2Image
+      Tags:
+        - Key: Name
+          Value: !Ref HostNameCE
+        - Key: Project
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Schedule
+          Value: !Ref Schedule
+        - Key: Team
+          Value: !Ref Team
+      UserData:
+#        Fn::Base64: !Sub |
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y aws-cfn-bootstrap* postgresql* postgresql-contrib*
+          sudo amazon-linux-extras install java-openjdk11
+          update-alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.7.10-4.amzn2.0.1.x86_64/bin/java
+          mkdir -p /app/sqube/
+          echo ${HostNameCE} > /etc/hostname
+          /opt/aws/bin/cfn-init -s ${AWS::StackId} -r SNRCE --region ${AWS::Region} & wait %1 || EXIT_CODE=0
+          sleep 60 & wait %1
+          sh /app/sqube/sqube.install.sh 2&> /app/sqube/installation.error.logs & wait %1 || EXIT_CODE=0
+          sleep 30 & wait %1
+          shutdown -r now
+  SNRDE:
+    Type: 'AWS::EC2::Instance'
+    Metadata:
+#      Comment: Install SonarQube
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            /app/sqube/sonar_db.sql:
+              content: |
+                CREATE USER sonar_de;
+                ALTER USER sonar_de WITH PASSWORD 'sonarpasswd';
+                CREATE DATABASE sonarqube_de WITH ENCODING 'UTF8';
+                ALTER DATABASE sonarqube_de OWNER TO sonar_de;
+                ALTER USER sonar_de SET search_path TO public;
+                GRANT ALL PRIVILEGES ON DATABASE sonarqube_de to sonar_ce;
+              mode: "000777"
+              owner: "root"
+              group: "root"
+            /app/sqube/sonar.properties:
+              content: |
+                sonar.jdbc.username=sonar_de
+                sonar.jdbc.password=sonarpasswd
+                sonar.jdbc.url=jdbc:postgresql://vmsonddv01.capx42v1f2r8.ap-southeast-1.rds.amazonaws.com:5432/sonarqube_de?currentSchema=public
+                sonar.web.host=0.0.0.0
+                sonar.web.port=9000
+              mode: "000644"
+              owner: "root"
+              group: "root"
+            /app/sqube/sonar.service:
+              content: |
+                [Unit]
+                Description=SonarQube service
+                After=syslog.target network.target
+                [Service]
+                Type=forking
+                ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+                ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+                User=sonar
+                Group=sonar
+                #Restart=always
+                Restart=on-failure
+                RestartSec=10s
+                LimitAS=infinity
+                LimitRSS=infinity
+                LimitCORE=infinity
+                LimitNOFILE=262144
+                [Install]
+                WantedBy=multi-user.target
+              mode: "000644"
+              owner: "root"
+              group: "root"
+            /app/sqube/sqube.install.sh:
+              content: |
+                #Configure sysctl variable
+                sudo echo "vm.max_map_count=262144" >> /etc/sysctl.conf;
+                sudo sysctl -p
+
+                #Configure database
+                #export PGPASSWORD=password
+                PGPASSWORD=password psql --host=vmsonddv01.capx42v1f2r8.ap-southeast-1.rds.amazonaws.com -U postgres -d postgres --file /app/sqube/sonar_db.sql -w & wait %1 || EXIT_CODE=0
+
+                #Extract SonarQube web app zip file in /opt
+                wget https://binaries.sonarsource.com/CommercialDistribution/sonarqube-developer/sonarqube-developer-8.6.0.39681.zip -P /opt/sonarqube/ & wait %1 || EXIT_CODE=0
+                unzip /opt/sonarqube/sonarqube-developer-8.6.0.39681.zip -d /opt/sonarqube/ & wait %1 || EXIT_CODE=0
+                sleep 30 & wait %1
+                mv /opt/sonarqube/sonarqube-8.6.0.39681/* /opt/sonarqube/
+                rm -rf /opt/sonarqube/sonarqube-8.6.0.39681/
+
+                #Configure proper permissions
+                sudo groupadd sonar
+                useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+                sudo chown sonar:sonar /opt/sonarqube -R
+
+                #Modify sonar.properties file
+                cp -p /opt/sonarqube/conf/sonar.properties /opt/sonarqube/conf/sonar.properties.bak
+                cp -p /app/sqube/sonar.properties /opt/sonarqube/conf/sonar.properties
+                sudo chown sonar:sonar /app/sqube/sonar.properties
+
+                #Edit the sonar script file and set RUN_AS_USER
+                sed -i '2s/^/RUN_AS_USER=sonar\n/' /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
+                #Create Sonar as a service
+                cp -p /app/sqube/sonar.service /etc/systemd/system/sonar.service
+                sudo systemctl start sonar
+                sudo systemctl enable sonar
+                sudo systemctl status sonar
+              mode: "000777"
+              owner: "root"
+              group: "root"
+    Properties:
+      InstanceType: t3.medium
+      KeyName: elk
+      SecurityGroupIds:
+        - !Ref SG1
+        - !GetAtt EC2SecGroup.GroupId
+      SubnetId: !Ref Subnet
+      ImageId: !Ref Linux2Image
+      Tags:
+        - Key: Name
+          Value: !Ref HostNameDE
+        - Key: Project
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Schedule
+          Value: !Ref Schedule
+        - Key: Team
+          Value: !Ref Team
+      UserData:
+#        Fn::Base64: !Sub |
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y aws-cfn-bootstrap* postgresql* postgresql-contrib*
+          sudo amazon-linux-extras install java-openjdk11
+          update-alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.7.10-4.amzn2.0.1.x86_64/bin/java
+          mkdir -p /app/sqube/
+          echo ${HostNameDE} > /etc/hostname
+          /opt/aws/bin/cfn-init -s ${AWS::StackId} -r SNRDE --region ${AWS::Region} & wait %1 || EXIT_CODE=0
+          sleep 60 & wait %1
+          sh /app/sqube/sqube.install.sh 2&> /app/sqube/installation.error.logs & wait %1 || EXIT_CODE=0
+          sleep 30 & wait %1
+          shutdown -r now
+
+  LBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC1
+      GroupDescription: Access to the load balancer that sits in front of EC2
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          FromPort: 9000
+          ToPort: 9000
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          FromPort: 9000
+          ToPort: 9000
+      Tags:
+        - Key: Name
+          Value: devops-elb-sonarqube-sg
+        - Key: Project
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Schedule
+          Value: !Ref Schedule
+        - Key: Team
+          Value: !Ref Team        
+
+  LoadBalancerCE:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      LoadBalancerName: vmsonelbdv01
+      Scheme: internal
+      Subnets:
+        - !Ref Subnet
+      SecurityGroups:
+        - !Ref LBSecurityGroup
+        - !Ref SG1
+      Tags:
+        - Key: Name
+          Value: vmsonelbdv01
+        - Key: Application Vendor
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Schedule
+          Value: !Ref Schedule
+        - Key: Team
+          Value: !Ref Team
+      Instances:
+        - !Ref SNRCE
+#      LoadBalancerPort: 9000
+      Listeners:
+        - InstancePort: 9000
+          LoadBalancerPort: 9000
+          Protocol: TCP
+          InstanceProtocol: TCP
+
+  LoadBalancerDE:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      LoadBalancerName: vmsonelbdv02
+      Scheme: internal
+      Subnets:
+        - !Ref Subnet
+      SecurityGroups:
+        - !Ref LBSecurityGroup
+        - !Ref SG1
+      Tags:
+        - Key: Name
+          Value: vmsonelbdv02
+        - Key: Application Vendor
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Schedule
+          Value: !Ref Schedule
+        - Key: Team
+          Value: !Ref Team
+      Instances:
+        - !Ref SNRDE
+#      LoadBalancerPort: 9000
+      Listeners:
+        - InstancePort: 9000
+          LoadBalancerPort: 9000
+          Protocol: TCP
+          InstanceProtocol: TCP
+
+Outputs:
+  EC2sg:
+    Description: SG for EC2s
+    Value:
+      Ref: EC2SecGroup
+  EC2CE:
+    Description: EC2 for Community Edition SonarQube
+    Value:
+      Ref: SNRCE
+  EC2DE:
+    Description: EC2 for Developer Edition SonarQube
+    Value:
+      Ref: SNRDE
+  ELBsg:
+    Description: SG for ELBs
+    Value:
+      Ref: LBSecurityGroup
+  ELBCE:
+    Description: ELB for Community Edition SonarQube
+    Value:
+      Ref: LoadBalancerCE
+  ELBDE:
+    Description: ELB for Developer Edition SonarQube
+    Value:
+      Ref: LoadBalancerDE

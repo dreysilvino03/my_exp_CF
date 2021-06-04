@@ -1,2 +1,2 @@
 # my_exp_CF
-APIM branch created from APIM project
+SonarQube branch created for SonarQube bootstrap.

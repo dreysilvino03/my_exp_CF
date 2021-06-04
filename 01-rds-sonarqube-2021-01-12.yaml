@@ -1,0 +1,154 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host Postgresql RDS for SonarQube.
+Parameters:
+
+  Project:
+    Description: Name of the Project
+    MinLength: '1'
+    Type: String
+    Default: 'DEVOPS:SonarQube'
+  WBSCode:
+    Description: Tag for WBSCode
+    Type: String
+    MinLength: '1'
+    Default: ISG-TECJUMP/18
+  Team:
+    Description: Team
+    Type: String
+    MinLength: '1'
+    Default: DEVOPS
+  CostCenter:
+    Description: Tag for Cost Center
+    MinLength: '1'
+    Type: String
+    Default: ISG-TECJUMP/18
+  Deployment:
+    Description: Select the status of the Deployment
+    Type: String
+    Default: 'DEV:LIVE'
+  PIN:
+    Description: 'PIN #'
+    MinLength: '1'
+    Type: String
+    Default: PIN-000000002781
+  VPC1:
+    Description: VPC
+    MinLength: '1'
+    Type: String
+    Default: vpc-6a20c00c
+  SG1:
+    Description: Security Groups
+    MinLength: '1'
+    Type: String
+    Default: sg-09ee3b775d9c295e2
+  Subnet:
+    Description: Subnets
+    MinLength: '1'
+    Type: String
+    Default: subnet-4d1a9a14
+  DBAllocatedStorage:
+    Description: The size of the database (Gb)
+    Type: Number
+    Default: 20
+  DBClass:
+    Description: Database instance class
+    Type: String
+    Default: "db.t2.micro"
+  DbName:
+    Description: Database Name for postgresql
+    Type: String
+    Default: "postgres"
+  MasterUsername:
+    Description: Database username
+    Type: String
+    Default: "postgres"
+  MasterPasswd:
+    Description: Database password
+    Type: String
+    Default: "password"
+  SubnetGrp:
+    Description: DB subnet group that defines which subnets and IP ranges
+    Type: String
+    Default: "napdatabasedv"
+  BackupRetentionPeriod:
+    Description: Backup Retention Period in Days.
+    Type: String
+    Default: 2
+  PreferredBackupWindow:
+    Description: Preferred Backup Window Time (UTC).
+    Type: String
+    Default: 23:00-23:30
+
+Resources:
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: VPC1
+      GroupDescription: Access to the RDS server
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+      VpcId: !Ref VPC1
+      Tags:
+        - Key: Name
+          Value: devops-rds-sonarqube-sg
+        - Key: Project
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Team
+          Value: !Ref Team
+
+  pgDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DbName
+      AllocatedStorage: !Ref DBAllocatedStorage
+      DBInstanceClass: !Ref DBClass
+      DBInstanceIdentifier: vmsonddv01
+      StorageType: gp2
+      Engine: postgres
+      Port: 5432
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      PreferredBackupWindow: !Ref PreferredBackupWindow
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterPasswd
+      DBSubnetGroupName: !Ref SubnetGrp
+      VPCSecurityGroups:
+        - !Ref SG1
+        - !GetAtt RDSSecurityGroup.GroupId
+      Tags:
+        - Key: Name
+          Value: vmsonddv01
+        - Key: Project
+          Value: !Ref Project
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Team
+          Value: !Ref Team
+
+Outputs:
+  RDSID:
+    Description: InstanceId of the newly created RDS Server
+    Value:
+      Ref: pgDB
+  RDSsg:
+    Description: SG of the newly created RDS Server
+    Value:
+      Ref: RDSSecurityGroup
