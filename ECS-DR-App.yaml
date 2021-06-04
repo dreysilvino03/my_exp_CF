@@ -1,0 +1,2282 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Globe EC2 - Linux Application Deployment
+Parameters:
+  Project:
+    Description: Name of the Project
+    MinLength: '1'
+    Type: String
+    Default: 'ECSINAWS:PH01'
+  Platform:
+    Description: Name of the platform
+    MinLength: '1'
+    Type: String
+    Default: EVOLVED CHARGING SUITE (ECS) - DR
+  WBSCode:
+    Description: Tag for WBSCode
+    Type: String
+    MinLength: '1'
+    Default: ISG-ECSDREGN-20-SV-DV
+  CostCenter:
+    Description: Tag for Cost Center
+    MinLength: '1'
+    Type: String
+    Default: ISG12-G1
+  Deployment:
+    Description: Select the status of the Deployment
+    Type: String
+    Default: 'PROD:PREP'
+  ApplicationVendor:
+    Description: Tag for Application Vendor
+    MinLength: '1'
+    Type: String
+    Default: OPENET
+  PlatformOwner:
+    Description: Name of the Project
+    MinLength: '1'
+    Type: String
+    Default: Matthew Louise Samonte
+  Domain:
+    Description: Name of the Domain
+    MinLength: '1'
+    Type: String
+    Default: Technology Group
+  PIN:
+    Description: 'PIN #'
+    MinLength: '1'
+    Type: String
+    Default: PIN-000000002781
+  System:
+    Description: System
+    MinLength: '1'
+    Type: String
+    Default: 'ECS'
+  SystemTier:
+    Description: Tier
+    MinLength: '1'
+    Type: String
+    Default: '1'
+  SG1:
+    Description: Security Groups
+    MinLength: '1'
+    Type: String
+    Default: sg-00b06d6cef1fc2e40
+  SG2:
+    Description: Security Groups
+    MinLength: '1'
+    Type: String
+    Default: sg-058d34bc94680faff
+Resources:
+  ECSApp02:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.21
+      Tags:
+        - Key: Name
+          Value: VMECSADR02
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr02 > /etc/hostname
+          shutdown -r now
+  ECSApp03:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.22
+      Tags:
+        - Key: Name
+          Value: VMECSADR03
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr03 > /etc/hostname
+          shutdown -r now
+  ECSApp04:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.23
+      Tags:
+        - Key: Name
+          Value: VMECSADR04
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr04 > /etc/hostname
+          shutdown -r now
+  ECSApp05:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.24
+      Tags:
+        - Key: Name
+          Value: VMECSADR05
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr05 > /etc/hostname
+          shutdown -r now
+  ECSApp06:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.25
+      Tags:
+        - Key: Name
+          Value: VMECSADR06
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr06 > /etc/hostname
+          shutdown -r now
+  ECSApp07:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.26
+      Tags:
+        - Key: Name
+          Value: VMECSADR07
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr07 > /etc/hostname
+          shutdown -r now
+  ECSApp08:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.27
+      Tags:
+        - Key: Name
+          Value: VMECSADR08
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr08 > /etc/hostname
+          shutdown -r now
+  ECSApp09:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.28
+      Tags:
+        - Key: Name
+          Value: VMECSADR09
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr09 > /etc/hostname
+          shutdown -r now
+  ECSApp10:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.29
+      Tags:
+        - Key: Name
+          Value: VMECSADR10
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr10 > /etc/hostname
+          shutdown -r now
+  ECSApp11:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.30
+      Tags:
+        - Key: Name
+          Value: VMECSADR11
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr11 > /etc/hostname
+          shutdown -r now
+  ECSApp12:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.31
+      Tags:
+        - Key: Name
+          Value: VMECSADR12
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr12 > /etc/hostname
+          shutdown -r now
+  ECSApp13:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.32
+      Tags:
+        - Key: Name
+          Value: VMECSADR13
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr13 > /etc/hostname
+          shutdown -r now
+  ECSApp14:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.33
+      Tags:
+        - Key: Name
+          Value: VMECSADR14
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr14 > /etc/hostname
+          shutdown -r now
+  ECSApp15:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.34
+      Tags:
+        - Key: Name
+          Value: VMECSADR15
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr15 > /etc/hostname
+          shutdown -r now
+  ECSApp16:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.35
+      Tags:
+        - Key: Name
+          Value: VMECSADR16
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr16 > /etc/hostname
+          shutdown -r now
+  ECSApp17:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.36
+      Tags:
+        - Key: Name
+          Value: VMECSADR17
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr17 > /etc/hostname
+          shutdown -r now
+  ECSApp18:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.37
+      Tags:
+        - Key: Name
+          Value: VMECSADR18
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr18 > /etc/hostname
+          shutdown -r now
+  ECSApp19:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.38
+      Tags:
+        - Key: Name
+          Value: VMECSADR19
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr19 > /etc/hostname
+          shutdown -r now
+  ECSApp20:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.39
+      Tags:
+        - Key: Name
+          Value: VMECSADR20
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr20 > /etc/hostname
+          shutdown -r now
+  ECSApp21:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.40
+      Tags:
+        - Key: Name
+          Value: VMECSADR21
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr21 > /etc/hostname
+          shutdown -r now
+  ECSApp22:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.41
+      Tags:
+        - Key: Name
+          Value: VMECSADR22
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr22 > /etc/hostname
+          shutdown -r now
+  ECSApp23:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.42
+      Tags:
+        - Key: Name
+          Value: VMECSADR23
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr23 > /etc/hostname
+          shutdown -r now
+  ECSApp24:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.43
+      Tags:
+        - Key: Name
+          Value: VMECSADR24
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr24 > /etc/hostname
+          shutdown -r now
+  ECSApp25:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.44
+      Tags:
+        - Key: Name
+          Value: VMECSADR25
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr25 > /etc/hostname
+          shutdown -r now
+  ECSApp26:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.45
+      Tags:
+        - Key: Name
+          Value: VMECSADR26
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr26 > /etc/hostname
+          shutdown -r now
+  ECSApp27:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.46
+      Tags:
+        - Key: Name
+          Value: VMECSADR27
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr27 > /etc/hostname
+          shutdown -r now
+  ECSApp28:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.47
+      Tags:
+        - Key: Name
+          Value: VMECSADR28
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr28 > /etc/hostname
+          shutdown -r now
+  ECSApp29:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.48
+      Tags:
+        - Key: Name
+          Value: VMECSADR29
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr29 > /etc/hostname
+          shutdown -r now
+  ECSApp30:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.49
+      Tags:
+        - Key: Name
+          Value: VMECSADR30
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr30 > /etc/hostname
+          shutdown -r now
+  ECSApp31:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.50
+      Tags:
+        - Key: Name
+          Value: VMECSADR31
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr31 > /etc/hostname
+          shutdown -r now
+  ECSApp32:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.51
+      Tags:
+        - Key: Name
+          Value: VMECSADR32
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr32 > /etc/hostname
+          shutdown -r now
+  ECSApp33:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.52
+      Tags:
+        - Key: Name
+          Value: VMECSADR33
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr33 > /etc/hostname
+          shutdown -r now
+  ECSApp34:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.53
+      Tags:
+        - Key: Name
+          Value: VMECSADR34
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr34 > /etc/hostname
+          shutdown -r now
+  ECSApp35:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.54
+      Tags:
+        - Key: Name
+          Value: VMECSADR35
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr35 > /etc/hostname
+          shutdown -r now
+  ECSApp36:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.55
+      Tags:
+        - Key: Name
+          Value: VMECSADR36
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr36 > /etc/hostname
+          shutdown -r now
+  ECSApp37:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.56
+      Tags:
+        - Key: Name
+          Value: VMECSADR37
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr37 > /etc/hostname
+          shutdown -r now
+  ECSApp38:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.57
+      Tags:
+        - Key: Name
+          Value: VMECSADR38
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr38 > /etc/hostname
+          shutdown -r now
+  ECSApp39:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.58
+      Tags:
+        - Key: Name
+          Value: VMECSADR39
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr39 > /etc/hostname
+          shutdown -r now
+  ECSApp40:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.59
+      Tags:
+        - Key: Name
+          Value: VMECSADR40
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr40 > /etc/hostname
+          shutdown -r now
+  ECSApp41:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.60
+      Tags:
+        - Key: Name
+          Value: VMECSADR41
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr41 > /etc/hostname
+          shutdown -r now
+  ECSApp42:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.61
+      Tags:
+        - Key: Name
+          Value: VMECSADR42
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr42 > /etc/hostname
+          shutdown -r now
+  ECSApp43:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.62
+      Tags:
+        - Key: Name
+          Value: VMECSADR43
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr43 > /etc/hostname
+          shutdown -r now
+  ECSApp44:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.63
+      Tags:
+        - Key: Name
+          Value: VMECSADR44
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr44 > /etc/hostname
+          shutdown -r now
+  ECSApp45:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.64
+      Tags:
+        - Key: Name
+          Value: VMECSADR45
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr45 > /etc/hostname
+          shutdown -r now
+  ECSApp46:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.65
+      Tags:
+        - Key: Name
+          Value: VMECSADR46
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr46 > /etc/hostname
+          shutdown -r now
+  ECSApp47:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.66
+      Tags:
+        - Key: Name
+          Value: VMECSADR47
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr47 > /etc/hostname
+          shutdown -r now
+  ECSApp48:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.67
+      Tags:
+        - Key: Name
+          Value: VMECSADR48
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr48 > /etc/hostname
+          shutdown -r now
+  ECSApp49:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.68
+      Tags:
+        - Key: Name
+          Value: VMECSADR49
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr49 > /etc/hostname
+          shutdown -r now
+  ECSApp50:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.69
+      Tags:
+        - Key: Name
+          Value: VMECSADR50
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr50 > /etc/hostname
+          shutdown -r now
+  ECSApp51:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.70
+      Tags:
+        - Key: Name
+          Value: VMECSADR51
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr51 > /etc/hostname
+          shutdown -r now
+  ECSApp52:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.71
+      Tags:
+        - Key: Name
+          Value: VMECSADR52
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr52 > /etc/hostname
+          shutdown -r now
+  ECSApp53:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.72
+      Tags:
+        - Key: Name
+          Value: VMECSADR53
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr53 > /etc/hostname
+          shutdown -r now
+  ECSApp54:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.73
+      Tags:
+        - Key: Name
+          Value: VMECSADR54
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr54 > /etc/hostname
+          shutdown -r now
+  ECSApp55:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: m5.12xlarge
+      SecurityGroupIds:
+        - Ref: SG1
+        - Ref: SG2
+      IamInstanceProfile: LZ-ECSDR-S3Policy
+      SubnetId: subnet-06c92beb29fd981a9
+      ImageId: ami-0f42cbbfc944cbf63
+      PrivateIpAddress: 10.68.94.74
+      Tags:
+        - Key: Name
+          Value: VMECSADR55
+        - Key: Project
+          Value: !Ref Project
+        - Key: System
+          Value: !Ref System
+        - Key: WBS Code
+          Value: !Ref WBSCode
+        - Key: Deployment
+          Value: !Ref Deployment
+        - Key: Cost Center
+          Value: !Ref CostCenter
+        - Key: Application Vendor
+          Value: !Ref ApplicationVendor
+        - Key: PIN
+          Value: !Ref PIN
+        - Key: System Tier
+          Value: !Ref SystemTier
+        - Key: Platform Owner
+          Value: !Ref PlatformOwner
+        - Key: Platform Name
+          Value: !Ref System
+        - Key: Domain
+          Value: !Ref Domain
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          sudo echo vmecsadr55 > /etc/hostname
+          shutdown -r now
