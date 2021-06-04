@@ -1,0 +1,54 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host S3 Bucket for Microservices Logs.
+Parameters:
+  BucketName:
+    Description: >-
+      Must contain only lowercase letters, numbers, periods (.), and hyphens
+      (-),Cannot end in numbers
+    Type: String
+    Default: apim-prod
+
+  BucketAccessControl:
+    Description: define if the bucket can be accessed from public or private locations
+    Type: String
+    AllowedValues:
+      - Private
+      - PublicRead
+      - PublicReadWrite
+      - AuthenticatedRead
+      - LogDeliveryWrite
+      - BucketOwnerRead
+      - BucketOwnerFullControl
+      - AwsExecRead
+    Default: "Private"
+
+Resources:
+  S3bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: !Ref BucketAccessControl
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+      Tags: 
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18  
+        - Key: Platform Name
+          Value: APIMONETIZATION  
+    DeletionPolicy: Retain

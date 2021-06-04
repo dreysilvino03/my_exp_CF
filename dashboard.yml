@@ -1,0 +1,367 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host Dashboardsand Alarms.
+Parameters:
+  EnvironmentName:
+    Description: Environment
+    Type: String
+
+  BusinessUnit:
+    Description: Organization
+    Type: String
+  ECSAutoScalingGroupMS: 
+     Type: String
+     Description: ECS AutoScaling Group for micro services.
+     Default: APMASGPD01
+  ECSAutoScalingGroupWeb: 
+     Type: String
+     Description: ECS AutoScaling Group for web apps.
+     Default: APMASGPD02     
+
+  Service1: 
+     Type: String
+     Description: Name of Service 
+     Default: auth-service  
+  Service2: 
+     Type: String
+     Description: Name of Service 
+     Default: consent-service 
+     Default: auth-service  
+  Cluster: 
+     Type: String
+     Description: Micro Services Cluster Name. 
+     Default: apim-prod-mservice-cluster  
+    
+Resources: 
+  
+  ECSInstancesDashboard1:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: Gllobe-ECS-Cluster-MS
+      DashboardBody: {"Fn::Join":[ "",['{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_used", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_free", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Free"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_total", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Total Disk Space"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_used_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Usage in Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_used", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Used"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_used_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Used in Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_available", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Available"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_total", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Total Memory"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_available_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Available Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"CPU Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_free", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupMS','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Free"}}]}']]}
+    
+  ECSInstancesDashboard2:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: Gllobe-ECS-Cluster-WA
+      DashboardBody: {"Fn::Join":[ "",['{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_used", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_free", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Free"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_total", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Total Disk Space"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "disk_used_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Disk Usage in Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_used", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Used"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_used_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Used in Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_available", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Available"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_total", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Total Memory"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_available_percent", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Available Percentage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"CPU Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "GLOBE-ECS", "mem_free", "AutoScalingGroupName","',!Ref 'ECSAutoScalingGroupWeb','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory Free"}}]}']]}    
+  authserviceDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: Gllobe-authservice
+      DashboardBody: {"Fn::Join":[ "",['{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/ECS", "MemoryUtilization", "ServiceName","',!Ref 'Service1','", "ClusterName","',!Ref 'Cluster','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory  Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/ECS", "CPUUtilization", "ServiceName","',!Ref 'Service1','", "ClusterName","',!Ref 'Cluster','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"CPU Usage"}}]}']]}
+  consentserviceDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: Gllobe-consentservice
+      DashboardBody: {"Fn::Join":[ "",['{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/ECS", "MemoryUtilization", "ServiceName","',!Ref 'Service2','", "ClusterName","',!Ref 'Cluster','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"Memory  Usage"}},{"type":"metric","x":0,"y":0,"width":12,"height":6,"properties":{"metrics":[[ "AWS/ECS", "CPUUtilization", "ServiceName","',!Ref 'Service2','", "ClusterName","',!Ref 'Cluster','" ]],"period":60,"region":"',!Ref 'AWS::Region','","title":"CPU Usage"}}]}']]}    
+
+  AutoScalingPolicy1:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+        AdjustmentType: ChangeInCapacity
+        AutoScalingGroupName: !Ref ECSAutoScalingGroupMS
+        Cooldown: 60
+        PolicyType: SimpleScaling
+        ScalingAdjustment: 1  
+
+  AutoScalingPolicy2:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+        AdjustmentType: ChangeInCapacity
+        AutoScalingGroupName: !Ref ECSAutoScalingGroupMS
+        Cooldown: 60
+        PolicyType: SimpleScaling
+        ScalingAdjustment: -1
+  AutoScalingPolicy3:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+        AdjustmentType: ChangeInCapacity
+        AutoScalingGroupName: !Ref ECSAutoScalingGroupWeb
+        Cooldown: 60
+        PolicyType: SimpleScaling
+        ScalingAdjustment: 1  
+
+  AutoScalingPolicy4:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+        AdjustmentType: ChangeInCapacity
+        AutoScalingGroupName: !Ref ECSAutoScalingGroupWeb
+        Cooldown: 60
+        PolicyType: SimpleScaling
+        ScalingAdjustment: -1                 
+
+  ECSClusterCPUAlarm1:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"  
+      - !Ref AutoScalingPolicy1
+      AlarmDescription: cpu usage of ECS Cluster micro services is greater than 75%.
+      AlarmName: ECS Cluster micro services Alarm for CPU > 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupMS
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing
+
+  ECSClusterCPUAlarm2:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy2
+      AlarmDescription: cpu usage of ECS Cluster micro services is smaller than 35%.
+      AlarmName: ECS Cluster micro services Alarm for CPU < 35%.
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupMS
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period: 60
+      Statistic: Average
+      Threshold: 35
+      TreatMissingData: missing
+  ECSClusterCPUAlarm3:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}" 
+      - !Ref AutoScalingPolicy3
+      AlarmDescription: cpu usage of ECS Cluster Web apps is greater than 75%.
+      AlarmName: ECS Cluster Web apps Alarm for CPU > 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupWeb
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing
+
+  ECSClusterCPUAlarm4:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy4
+      AlarmDescription: cpu usage of ECS Cluster Web appsis smaller than 35%.
+      AlarmName: ECS Cluster Web apps Alarm for CPU < 35%.
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupWeb
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period: 60
+      Statistic: Average
+      Threshold: 35
+      TreatMissingData: missing                
+      
+  ECSClusterRAMAlarm1:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy1
+      AlarmDescription: Memory usage of ECS Cluster micro services is greater than 75%.
+      AlarmName: ECS Cluster micro services Alarm for Memory Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupMS
+      EvaluationPeriods: 1
+      MetricName: mem_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing
+
+  ECSClusterRAMAlarm2:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy2
+      AlarmDescription: Memory usage of ECS Cluster micro services is less than 35%.
+      AlarmName: ECS Cluster micro services Alarm for Memory Usage <= 35%.
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupMS
+      EvaluationPeriods: 1
+      MetricName: mem_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 35
+      TreatMissingData: missing  
+  ECSClusterRAMAlarm3:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy3
+      AlarmDescription: Memory usage of ECS Cluster Web apps is greater than 75%.
+      AlarmName: ECS Cluster Web apps Alarm for Memory Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupWeb
+      EvaluationPeriods: 1
+      MetricName: mem_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing
+
+  ECSClusterRAMAlarm4:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      - !Ref AutoScalingPolicy4
+      AlarmDescription: Memory usage of ECS Cluster Web apps is less than 35%.
+      AlarmName: ECS Cluster Web apps Alarm for Memory Usage <= 35%.
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref ECSAutoScalingGroupWeb
+      EvaluationPeriods: 1
+      MetricName: mem_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 35
+      TreatMissingData: missing      
+
+  ECSClusterDiskAlarm1:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: Disk usage of ECS Cluster micro services is greater than 80%.
+      AlarmName: ECS Cluster micro services Alarm for Disk Usage >= 80%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !Ref ECSAutoScalingGroupMS
+      EvaluationPeriods: 1
+      MetricName: disk_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 80
+      TreatMissingData: missing
+  ECSClusterDiskAlarm2:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: Disk usage of ECS Cluster Web apps is greater than 80%.
+      AlarmName: ECS Cluster Web apps Alarm for Disk Usage >= 80%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value: !Ref ECSAutoScalingGroupWeb
+      EvaluationPeriods: 1
+      MetricName: disk_used_percent
+      Namespace: GLOBE-ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 80
+      TreatMissingData: missing    
+  authserviceCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: CPU usage of auth service is greater than 75%.
+      AlarmName: auth service Alarm for CPU Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !Ref Service1 
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing  
+  authserviceMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: Memory usage of auth service is greater than 75%.
+      AlarmName: auth service Alarm for Memory Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !Ref Service1 
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing      
+  consentserviceCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: CPU usage of consent service is greater than 75%.
+      AlarmName: consent service Alarm for CPU Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !Ref Service2 
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing  
+  consentserviceMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/sns:1}}"
+      AlarmDescription: Memory usage of consent service is greater than 75%.
+      AlarmName: consent service Alarm for Memory Usage >= 75%.
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: ClusterName
+          Value: !Ref Cluster
+        - Name: ServiceName
+          Value: !Ref Service2 
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      Threshold: 75
+      TreatMissingData: missing    

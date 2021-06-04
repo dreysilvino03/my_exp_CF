@@ -1,0 +1,215 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host ALB's for Microservices and WebApps.
+Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+
+  BusinessUnit:
+    Description: Name of the Organization
+    Type: String
+
+Resources:
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpc:1}}"
+      GroupDescription: Access to the load balancer that sits in front of ECS
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+      Tags:
+        - Key: Name
+          Value: elb-apm-prdisg-sg01
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18 
+        - Key: Platform Name
+          Value: APIMONETIZATION   
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: vmapmelbpd01
+      Subnets: 
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet1:1}}"
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet2:1}}"
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: vmapmelbpd01
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18
+        - Key: Platform Name
+          Value: APIMONETIZATION    
+
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: fixed-response
+          FixedResponseConfig:
+            StatusCode: 503
+            ContentType: text/plain
+
+  ConsentLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: vmapmelbpd02
+      Subnets: 
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet1:1}}"
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet2:1}}"
+
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: vmapmelbpd02
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18
+        - Key: Platform Name
+          Value: APIMONETIZATION 
+
+  ConsentTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "consent-webapp"]]
+      Protocol: HTTP
+      Port: 80
+      VpcId: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpc:1}}"
+      TargetType: instance
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 3
+      Matcher:
+        HttpCode: "200"
+      HealthCheckPath: "/"
+
+  ConsentLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ConsentLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ConsentTargetGroup
+
+  DashboardLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: vmapmelbpd03
+      Subnets: 
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet1:1}}"
+        - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/publicsubnet2:1}}"
+
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: vmapmelbpd03
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18
+        - Key: Platform Name
+          Value: APIMONETIZATION 
+
+  DashboardTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "dashboard-webapp"]]
+      Protocol: HTTP
+      Port: 80
+      VpcId: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpc:1}}"
+      TargetType: instance
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 3
+      Matcher:
+        HttpCode: "200"
+      HealthCheckPath: "/"
+
+  DashboardLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref DashboardLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DashboardTargetGroup
+
+  LoadBalancerParameter:
+    Type: "AWS::SSM::Parameter"
+    DependsOn: LoadBalancerListener
+    Properties:
+      Name: !Sub "/${BusinessUnit}/${EnvironmentName}/LoadBalancer"
+      Type: "String"
+      Value: !Ref LoadBalancerListener 
+
+  LoadBalancerSecurityGroupParameter:
+    Type: "AWS::SSM::Parameter"
+    DependsOn: LoadBalancerSecurityGroup
+    Properties:
+      Name: !Sub "/${BusinessUnit}/${EnvironmentName}/LoadBalancerSecurityGroup"
+      Type: "String"
+      Value: !Ref LoadBalancerSecurityGroup    
+
+Outputs:
+  LoadBalancerSecurityGroup:
+    Description: A reference to the Load Balancer Security Group
+    Value: !Ref LoadBalancerSecurityGroup
+
+  LoadBalancer:
+    Description: A reference to the Application Load Balancer
+    Value: !Ref LoadBalancer
+
+  LoadBalancerUrl:
+    Description: The URL of the ALB
+    Value: !GetAtt LoadBalancer.DNSName
+
+  Listener:
+    Description: A reference to a port 80 listener
+    Value: !Ref LoadBalancerListener

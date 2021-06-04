@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host ECS Services Auto-Scaling.
+Parameters: 
+  authMaxCapacity: 
+    Type: String
+    Description: auth service task max. capacity.
+    Default: 2 
+  authMinCapacity: 
+    Type: String
+    Description: auth service task min. capacity.
+    Default: 1
+  consentMaxCapacity: 
+    Type: String
+    Description: auth service task max. capacity. 
+    Default: 2 
+  consentMinCapacity: 
+    Type: String
+    Description: auth service task min. capacity.
+    Default: 1  
+  authgreaterthanTargetValue:
+    Type: String
+    Description: auth service max. thresold.
+    Default: 75
+  authlessthanTargetValue:
+    Type: String
+    Description: auth service min thresold.
+    Default: 35
+  consentgreaterthanTargetValue:
+    Type: String
+    Description: consent service max. thresold. 
+    Default: 75 
+  consentlessthanTargetValue:
+    Type: String
+    Description: consent service min. thresold.
+    Default: 35  
+    
+Resources:  
+  ecsautoscalerole: 
+      Type: "AWS::IAM::Role"
+      DeletionPolicy: Retain
+      Properties: 
+        
+        AssumeRolePolicyDocument: 
+          Version: "2012-10-17"
+          Statement: 
+            - 
+              Effect: "Allow"
+              Principal: 
+                Service: 
+                   - "application-autoscaling.amazonaws.com"
+              Action: 
+                - "sts:AssumeRole"
+        Path: "/"
+        Policies: 
+          - 
+            PolicyName: "ecsautoscale"
+            PolicyDocument: 
+              Version: "2012-10-17"
+              Statement: 
+                - 
+                   Effect: "Allow"
+                   Action: 
+                    - "ecs:DescribeServices"
+                    - "ecs:UpdateService"
+                    - "cloudwatch:DescribeAlarms"
+                    - "cloudwatch:PutMetricAlarm"
+                   Resource: "apim-prod-*"
+
+  authserviceTarget:
+      Type: AWS::ApplicationAutoScaling::ScalableTarget
+      DeletionPolicy: Retain
+      Properties:
+        MaxCapacity: !Ref authMaxCapacity
+        MinCapacity: !Ref authMinCapacity
+        ResourceId: service/apim-prod-mservice-cluster/auth-service
+        RoleARN: {"Fn::GetAtt" : ["ecsautoscalerole", "Arn"] }
+        ScalableDimension: ecs:service:DesiredCount
+        ServiceNamespace: ecs    
+  consentserviceTarget:
+      Type: AWS::ApplicationAutoScaling::ScalableTarget
+      DeletionPolicy: Retain
+      Properties:
+        MaxCapacity: !Ref consentMaxCapacity
+        MinCapacity: !Ref consentMinCapacity
+        ResourceId: service/apim-prod-mservice-cluster/consent-service
+        RoleARN: {"Fn::GetAtt" : ["ecsautoscalerole", "Arn"] }
+        ScalableDimension: ecs:service:DesiredCount
+        ServiceNamespace: ecs      
+
+  authCPUAutoScalingPolicy:
+      Type : "AWS::ApplicationAutoScaling::ScalingPolicy"
+      DeletionPolicy: Retain
+      Properties: 
+        PolicyName: CPUScaleout
+        PolicyType: TargetTrackingScaling
+        ScalingTargetId: !Ref authserviceTarget
+        TargetTrackingScalingPolicyConfiguration:
+          DisableScaleIn: True
+          TargetValue: !Ref authgreaterthanTargetValue
+          ScaleInCooldown: 60
+          ScaleOutCooldown: 60
+          PredefinedMetricSpecification: 
+            PredefinedMetricType: ECSServiceAverageCPUUtilization
+  authMemoryAutoScalingPolicy:
+      Type : "AWS::ApplicationAutoScaling::ScalingPolicy"
+      DeletionPolicy: Retain
+      Properties: 
+        PolicyName: MemoryScaleout
+        PolicyType: TargetTrackingScaling
+        ScalingTargetId: !Ref authserviceTarget
+        TargetTrackingScalingPolicyConfiguration:
+          DisableScaleIn: True
+          TargetValue: !Ref authlessthanTargetValue
+          ScaleInCooldown: 60
+          ScaleOutCooldown: 60
+          PredefinedMetricSpecification: 
+            PredefinedMetricType: ECSServiceAverageMemoryUtilization          
+
+  consentCPUAutoScalingPolicy:
+      Type : "AWS::ApplicationAutoScaling::ScalingPolicy"
+      DeletionPolicy: Retain
+      Properties: 
+        PolicyName: CPUScaleout
+        PolicyType: TargetTrackingScaling
+        ScalingTargetId: !Ref consentserviceTarget
+        TargetTrackingScalingPolicyConfiguration:
+          DisableScaleIn: True
+          TargetValue: !Ref consentgreaterthanTargetValue
+          ScaleInCooldown: 60
+          ScaleOutCooldown: 60
+          PredefinedMetricSpecification: 
+            PredefinedMetricType: ECSServiceAverageCPUUtilization    
+  consentMemoryAutoScalingPolicy:
+      Type : "AWS::ApplicationAutoScaling::ScalingPolicy"
+      DeletionPolicy: Retain
+      Properties: 
+        PolicyName: MemoryScaleout
+        PolicyType: TargetTrackingScaling
+        ScalingTargetId: !Ref consentserviceTarget
+        TargetTrackingScalingPolicyConfiguration:
+          DisableScaleIn: True
+          TargetValue: !Ref consentlessthanTargetValue
+          ScaleInCooldown: 60
+          ScaleOutCooldown: 60
+          PredefinedMetricSpecification: 
+            PredefinedMetricType: ECSServiceAverageMemoryUtilization                
+  

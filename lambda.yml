@@ -1,0 +1,251 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host Lambda Function for RDS hourly Snapshots.
+Parameters:
+  EnvironmentName:
+    Description: Name of the Environment
+    Type: String
+   
+  BusinessUnit:
+    Description: Name of the Organization
+    Type: String
+
+Resources:
+
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpc:1}}"
+      GroupDescription: Security group for Lambda function
+      SecurityGroupIngress:
+        - CidrIp: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpccidr:1}}"
+          IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+      Tags:
+        - Key: Name
+          Value: lmd-apm-prodisg-sg01
+        - Key: Backup 
+          Value: Weekly
+        - Key: Deployment
+          Value: PROD:PREP
+        - Key: Project
+          Value: APIMONETIZATION
+        - Key: Cost Center
+          Value: ISG-TECAPIMON/18
+        - Key: WBS Code
+          Value: ISG-TECAPIMON/18 
+        - Key: Platform Name
+          Value: APIMONETIZATION
+  
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Action": "sts:AssumeRole",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "lambda.amazonaws.com"
+                }
+            }]
+        }
+      
+      Policies:
+        - PolicyName: VPC-service
+          PolicyDocument: |
+            {
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Action": [
+                         "ec2:AuthorizeSecurityGroupEgress",
+                         "ec2:AuthorizeSecurityGroupIngress",
+                         "ec2:CreateSecurityGroup",        
+                         "ec2:DescribeAccountAttributes",
+                         "ec2:DescribeAddresses",
+                         "ec2:DescribeAvailabilityZones",
+                         "ec2:DescribeInstances",
+                         "ec2:DescribeNetworkAcls",
+                         "ec2:DescribeSecurityGroupReferences",
+                         "ec2:DescribeSecurityGroups",
+                         "ec2:DescribeStaleSecurityGroups",
+                         "ec2:DescribeSubnets",
+                         "ec2:DescribeTags",
+                         "ec2:DescribeVpcAttribute",
+                         "ec2:DescribeVpcs",
+                         "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
+                         "ec2:UpdateSecurityGroupRuleDescriptionsIngress"
+                    ],
+                    "Resource": "apim-prod-*"
+                }]
+            }
+      
+        - PolicyName: RDS-service
+          PolicyDocument: |
+            {
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Action": [
+                         "rds:CreateEventSubscription",
+                         "rds:AuthorizeDBSecurityGroupIngress",
+                         "rds:DescribeDBInstanceAutomatedBackups",
+                         "rds:DescribePendingMaintenanceActions",
+                         "rds:DescribeDBInstances",
+                         "rds:DescribeSourceRegions",
+                         "rds:DescribeEngineDefaultClusterParameters",
+                         "rds:DescribeDBParameters",
+                         "rds:DescribeEventCategories",
+                         "rds:DescribeEvents",
+                         "rds:DescribeDBClusterSnapshotAttributes",
+                         "rds:DescribeDBClusterParameters",
+                         "rds:DescribeEventSubscriptions",
+                         "rds:DescribeDBSnapshots",
+                         "rds:CopyDBSnapshot",
+                         "rds:CopyDBClusterSnapshot",
+                         "rds:ModifyEventSubscription",
+                         "rds:DescribeDBSecurityGroups",
+                         "rds:DescribeDBSnapshotAttributes",
+                         "rds:ModifyDBSnapshot",
+                         "rds:CreateDBSnapshot",
+                         "rds:DescribeValidDBInstanceModifications",
+                         "rds:DescribeDBClusterSnapshots",
+                         "rds:CreateDBClusterSnapshot",
+                         "rds:DescribeDBClusterEndpoints",
+                         "rds:ModifyDBSnapshotAttribute",
+                         "rds:DescribeDBClusters",
+                         "rds:DescribeDBClusterParameterGroups"
+                    ],
+                    "Resource": "apim-prod-*"
+                }]
+            }
+        Policies:
+        - PolicyName: Cloudwatch-events
+          PolicyDocument: |
+            {
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Action": [
+                         "events:PutEvents",
+                         "events:DescribeRule",
+                         "events:EnableRule",
+                         "events:CreateEventBus",
+                         "events:PutRule",
+                         "events:DescribePartnerEventSource",
+                         "events:DescribeEventSource",
+                         "events:ListEventBuses",
+                         "events:TestEventPattern",
+                         "events:PutPermission",
+                         "events:DescribeEventBus",
+                         "events:PutTargets",
+                         "events:PutPartnerEvents",
+                         "events:ListRuleNamesByTarget",
+                         "events:ListEventSources",
+                         "events:ListRules"
+                    ],
+                    "Resource": "apim-prod-*"
+                }]
+            }
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties: 
+      Code: 
+        ZipFile: |
+          import boto3
+          import json
+          from datetime import datetime, timedelta, tzinfo
+          client = boto3.client('rds')
+          def lambda_handler(event, context):
+              print("Connecting to RDS")
+    
+
+          #Creating new snapshots
+          #DBInstanceIdentifier - The name of your database instance
+          #DBSnapshotIdentifier - the name of your snapshot. Please make sure to add the date with it to distinguish between snapshots.
+
+              print("RDS snapshot backups stated at %s...\n" % datetime.now())
+              client.create_db_snapshot(
+              DBInstanceIdentifier='vmapmdpd01',
+              DBSnapshotIdentifier='apim-prod-%s' % datetime.now().strftime("%y-%m-%d-%H"),
+          Tags=[
+          { 
+          'Key': 'Project',
+          'Value': 'APIMONETIZATION'
+          },
+          { 
+          'Key': 'Application Vendor',
+          'Value': 'Srijan'
+          },
+          { 
+          'Key': 'Backup',
+          'Value': 'Hourly'
+          },
+          { 
+          'Key': 'Deployment',
+          'Value': 'PROD:PREP'
+          },
+          { 
+          'Key': 'Cost Center',
+          'Value': 'ISG-TECAPIMON/18'
+          },
+          { 
+          'Key': 'WBS Code',
+          'Value': 'ISG-TECAPIMON/18'
+          },
+          { 
+          'Key': 'Platform Name',
+          'Value': 'APIMONETIZATION'
+          },
+          ]
+          )
+
+
+          #Deleting old snapshots
+          #Timedelta - modify this value as per how long you wish to retain a single backup
+          for snapshot in client.describe_db_snapshots(DBInstanceIdentifier='vmapmdpd01', SnapshotType='manual')['DBSnapshots']:
+              if snapshot['SnapshotCreateTime'].replace(tzinfo=None) < (datetime.now() - timedelta(days=7)):
+                  print "Deleting snapshot id:", snapshot['DBSnapshotIdentifier']
+                  client.delete_db_snapshot(
+                  DBSnapshotIdentifier=snapshot['DBSnapshotIdentifier']
+          )
+    
+      Description: Lambda function to create per hour RDS manual snapshots
+      #Environment: 
+      #  Environment
+      #FunctionName: lambda_function.py
+      Handler: lambda_function.lambda_handler
+      MemorySize: 128
+      Role: 
+        Fn::GetAtt: 
+        - "LambdaRole"
+        - "Arn"
+      Runtime: python2.7
+      Tags: 
+        - Key: Project
+          Value: APIMONETIZATION
+      Timeout: 3
+      VpcConfig: 
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
+        SubnetIds:
+          - !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/lambdasubnet1:1}}"
+        
+  EventRule: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "Event for RDS snapshots"
+      EventPattern: 
+        source: 
+          - "aws.events"
+        detail-type: 
+          - "Scheduled Event"
+      ScheduleExpression: cron(0 * * * ? *)    
+      Targets: 
+        - 
+          Arn: 
+            Fn::GetAtt: 
+              - "LambdaFunction"
+              - "Arn"
+          Id: "TargetFunctionV1"    

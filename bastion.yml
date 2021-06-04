@@ -1,0 +1,142 @@
+---
+Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+
+  BusinessUnit:
+    Description: Name of the Organization
+    Type: String
+
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Choose which VPC the Application Load Balancer should be deployed to
+
+  Subnets:
+    Description: Choose which subnets this ECS cluster should be deployed to
+    Type: List<AWS::EC2::Subnet::Id>
+
+  InstanceType:
+    Description: Which instance type should we use to build the Bastion Server
+    Type: String
+
+  KeyName:
+    Description: Which instance type should we use to build the Bastion Server
+    Type: String
+
+  ImageID:
+    Description: Bastion Host Image ID
+    Type: String
+
+  ClusterSize:
+    Description: How many ECS hosts do you want to initially deploy?
+    Type: Number
+    Default: 1
+
+Resources:
+  BastionSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: Retain
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Access to the bastion server
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "bastion"]]
+
+  BastionAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    DeletionPolicy: Retain
+    Properties:
+      AutoScalingGroupName: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "bastion"]]
+      VPCZoneIdentifier: !Ref Subnets
+      LaunchConfigurationName: !Ref BastionLaunchConfiguration
+      MinSize: !Ref ClusterSize
+      MaxSize: !Ref ClusterSize
+      DesiredCapacity: !Ref ClusterSize
+      Tags:
+        - Key: Name
+          Value: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "bastion"]]
+          PropagateAtLaunch: true
+        - Key: Role
+          Value: bastion
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: bastion
+          PropagateAtLaunch: true
+        - Key: BusinessUnit
+          Value: !Ref BusinessUnit
+          PropagateAtLaunch: true
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: 1
+        MaxBatchSize: 1
+        PauseTime: PT15M
+        SuspendProcesses:
+          - HealthCheck
+          - ReplaceUnhealthy
+          - AZRebalance
+          - AlarmNotification
+          - ScheduledActions
+        WaitOnResourceSignals: true
+
+  BastionLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    DeletionPolicy: Retain
+    Properties:
+      AssociatePublicIpAddress: true
+      LaunchConfigurationName: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "bastion"]]
+      ImageId: !Ref ImageID
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref BastionSecurityGroup
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/xvda"
+          Ebs: 
+            VolumeSize: "10"
+            DeleteOnTermination: true
+            Encrypted: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          amazon-linux-extras install -y postgresql10
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource BastionAutoScalingGroup --region ${AWS::Region}
+
+  ScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    DeletionPolicy: Retain
+    Properties:
+     AdjustmentType: ChangeInCapacity
+     AutoScalingGroupName:
+       Ref: BastionAutoScalingGroup
+     Cooldown: '300'
+     ScalingAdjustment: '1'
+
+  CPUAlarmHigh:
+    Type: AWS::CloudWatch::Alarm
+    DeletionPolicy: Retain
+    Properties:
+      AlarmName: !Join ["-", [!Ref BusinessUnit, !Ref EnvironmentName, "AL"]]
+      EvaluationPeriods: '1'
+      Statistic: Average
+      Threshold: '50'
+      AlarmDescription: Alarm if CPU too high or metric disappears indicating instance is down
+      Period: '120'
+      AlarmActions:
+      - Ref: ScaleUpPolicy
+      Namespace: AWS/EC2
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: BastionAutoScalingGroup
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: CPUUtilization
+
+Outputs:
+  BastionAutoScalingGroupName:
+    Description: Name of the AutoScaling Group Auto Scaling group
+    Value: !Ref BastionAutoScalingGroup

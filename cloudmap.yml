@@ -1,0 +1,27 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Architecture to host CloudMap for Service Discovery of Microservices.
+Parameters:
+  EnvironmentName:
+    Description: Name of the Environment
+    Type: String
+
+  BusinessUnit:
+    Description: Name of the Organization
+    Type: String
+
+Resources:
+  Namespace: 
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties: 
+       Description: Namespace for cloudmap
+       Name: !Join ["-", [!Ref EnvironmentName, "services"]]
+       Vpc: !Sub "{{resolve:ssm:/${BusinessUnit}/${EnvironmentName}/vpc:1}}"
+
+  NameSpaceIDParameter:
+    Type: "AWS::SSM::Parameter"
+    DependsOn: Namespace
+    Properties:
+      Name: !Sub "/${BusinessUnit}/${EnvironmentName}/NameSpaceID"
+      Type: "String"
+      Value: !Ref Namespace

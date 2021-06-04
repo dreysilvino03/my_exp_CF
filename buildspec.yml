@@ -1,0 +1,17 @@
+version: 0.2 
+
+phases: 
+  install: 
+    commands: 
+      
+  pre_build: 
+    commands: 
+    
+  build: 
+    commands: 
+      - cd CloudFormation/infra/prod
+      - chmod +x deploy.sh
+      - ./deploy.sh $ENV
+
+  post_build: 
+    commands:
