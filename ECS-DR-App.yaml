@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Globe EC2 - Linux Application Deployment
+Description: EC2 - Linux Application Deployment
 Parameters:
   Project:
     Description: Name of the Project
