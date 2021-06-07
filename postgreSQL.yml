@@ -77,7 +77,7 @@ Resources:
       Description: !Join [" ", [!Ref EnvironmentName, "rds instance secret"]]
       GenerateSecretString:
         SecretStringTemplate: '{"username": "root"}'
-        GenerateStringKey: 'password'
+        GenerateStringKey: '********'
         PasswordLength: 16
         ExcludeCharacters: '"@/\'
       Tags:
